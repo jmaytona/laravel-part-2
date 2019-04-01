@@ -7,16 +7,20 @@ use Illuminate\Http\Request;
 class PagesController extends Controller
 {
     public function index() {
-        $title = "TEST";
-        /* return view('pages.index')->with('title', $title); */
-        return view('pages.index', compact('title'));
+        $title = "Welcome to BLOG APPLICATION";
+        return view('pages.index')->with('title', $title);  
     }
 
     public function about() {
-        return view('pages.about');
+        $title = "About Us";
+        return view('pages.about', compact('title'));
     }
 
     public function service() {
-        return view('pages.service');
+        $data = [
+            "title" => "How we can serve",
+            "services" => ["Provide Blogs", "Seminars", "Online Teaching", "Published Books"]
+        ];
+        return view('pages.service')->with($data);
     }
 }
