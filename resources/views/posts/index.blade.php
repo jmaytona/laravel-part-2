@@ -2,12 +2,15 @@
 @section('content')
     <h1>POST</h1>
     @if(count($posts) > 0)
-        <ul>
+        <ul class="list-group">
             @foreach($posts as $post)
-            <li><a href="/posts/{{$post->id}}">{{$post->title}}</a></li>
-            <small>Created at: {{$post->created_at}}</small>
+            <li class="list-group-item">
+                <a href="/posts/{{$post->id}}">{{$post->title}}</a>
+                <small>Created at: {{$post->created_at}}</small>
+            </li>
             @endforeach
         </ul>
+        <hr>
         {{$posts->links()}}
     @else
         <p>No Post Found</p>
