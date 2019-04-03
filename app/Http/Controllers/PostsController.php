@@ -13,6 +13,13 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    //User Authentication
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+
     public function index()
     {   
         //Eloquent call database
@@ -31,7 +38,7 @@ class PostsController extends Controller
         //$posts = Post::orderBy('title', 'desc')->get();
 
         //Eloquent pagination
-        $posts = Post::orderBy('created_at', 'desc')->paginate(5);
+        $posts = Post::orderBy('updated_at', 'desc')->paginate(5);
 
         return view('posts.index')->with('posts', $posts);  
     }
@@ -62,6 +69,7 @@ class PostsController extends Controller
         $post = new Post;
         $post->title = $request->input('title');
         $post->body = $request->input('body');
+        $post->user_id = auth()->user()->id;
         $post->save();
 
         return redirect('/posts')->with('success', 'Post Created');
@@ -87,8 +95,14 @@ class PostsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
+    { 
+        $post = Post::find($id);  
+        //Authentication for users not to edit other users post
+        if(auth()->user()->id !== $post->user_id){
+            return redirect('/posts')->with('error', 'Unauthorized User');
+        }
+        
+        return view('posts.edit')->with('post', $post);
     }
 
     /**
@@ -100,7 +114,17 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'title' => 'required',
+            'body' => 'required'
+        ]);
+
+        $post = Post::find($id);
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+        $post->save();
+
+        return redirect('/posts/'.$post->id)->with('success', 'Post Updated');
     }
 
     /**
@@ -111,6 +135,12 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::find($id);
+        //Authentication for users not to delete other users post
+        if(auth()->user()->id !== $post->user_id){
+            return redirect('/posts')->with('error', 'Unauthorized User');
+        }
+        $post->delete();
+        return redirect('/posts')->with('success', 'Post Removed');
     }
 }
