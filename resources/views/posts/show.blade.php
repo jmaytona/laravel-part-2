@@ -2,6 +2,8 @@
 @section('content')
 <a class="btn btn-default" href="/posts">Back</a>
     <h1>{{$post->title}}</h1>
+    <img style="width:800px; height: 400px" src="/storage/cover_images/{{$post->cover_image}}" alt="Picture">
+    <br>
     <p>{{$post->body}}</p>
     <hr>
     <small>by: {{$post->user->name}}</small>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <h1>EDIT POST</h1>
-    <form method="POST" action="{{ action('PostsController@update',  [$post->id]) }}">
+    <form method="POST" action="{{ action('PostsController@update',  [$post->id]) }}"  enctype="multipart/form-data">
         {{-- Hidden method PUT for update --}}
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
         <div class="form-group">
@@ -12,6 +12,9 @@
             <label for="body">Body:</label>
             <textarea class="form-control" name="body" id="body" rows="4">{{$post->body}}</textarea>
         </div>
+        <input type="file" name="cover_image">
+        <br>
+        <br>
         <input type="hidden" name="_method" value="PUT">
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
